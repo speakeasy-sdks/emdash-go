@@ -44,7 +44,27 @@ func Float32(f float32) *float32 { return &f }
 // Float64 provides a helper function to return a pointer to a float64
 func Float64(f float64) *float64 { return &f }
 
-// SpaceTraders - SpaceTraders is an open-universe game and learning platform that offers a set of HTTP endpoints to control a fleet of ships and explore a multiplayer universe.
+type sdkConfiguration struct {
+	DefaultClient     HTTPClient
+	SecurityClient    HTTPClient
+	Security          *shared.Security
+	ServerURL         string
+	ServerIndex       int
+	Language          string
+	OpenAPIDocVersion string
+	SDKVersion        string
+	GenVersion        string
+}
+
+func (c *sdkConfiguration) GetServerDetails() (string, map[string]string) {
+	if c.ServerURL != "" {
+		return c.ServerURL, nil
+	}
+
+	return ServerList[c.ServerIndex], nil
+}
+
+// SpaceTraders - SpaceTraders API: SpaceTraders is an open-universe game and learning platform that offers a set of HTTP endpoints to control a fleet of ships and explore a multiplayer universe.
 //
 // The API is documented using [OpenAPI](https://github.com/SpaceTradersAPI/api-docs). You can send your first request right here in your browser to check the status of the game server.
 //
@@ -72,14 +92,7 @@ type SpaceTraders struct {
 	// Systems - Systems
 	Systems *systems
 
-	// Non-idiomatic field names below are to namespace fields from the fields names above to avoid name conflicts
-	_defaultClient  HTTPClient
-	_securityClient HTTPClient
-	_security       *shared.Security
-	_serverURL      string
-	_language       string
-	_sdkVersion     string
-	_genVersion     string
+	sdkConfiguration sdkConfiguration
 }
 
 type SDKOption func(*SpaceTraders)
@@ -87,7 +100,7 @@ type SDKOption func(*SpaceTraders)
 // WithServerURL allows the overriding of the default server URL
 func WithServerURL(serverURL string) SDKOption {
 	return func(sdk *SpaceTraders) {
-		sdk._serverURL = serverURL
+		sdk.sdkConfiguration.ServerURL = serverURL
 	}
 }
 
@@ -98,95 +111,70 @@ func WithTemplatedServerURL(serverURL string, params map[string]string) SDKOptio
 			serverURL = utils.ReplaceParameters(serverURL, params)
 		}
 
-		sdk._serverURL = serverURL
+		sdk.sdkConfiguration.ServerURL = serverURL
+	}
+}
+
+// WithServerIndex allows the overriding of the default server by index
+func WithServerIndex(serverIndex int) SDKOption {
+	return func(sdk *SpaceTraders) {
+		if serverIndex < 0 || serverIndex >= len(ServerList) {
+			panic(fmt.Errorf("server index %d out of range", serverIndex))
+		}
+
+		sdk.sdkConfiguration.ServerIndex = serverIndex
 	}
 }
 
 // WithClient allows the overriding of the default HTTP client used by the SDK
 func WithClient(client HTTPClient) SDKOption {
 	return func(sdk *SpaceTraders) {
-		sdk._defaultClient = client
+		sdk.sdkConfiguration.DefaultClient = client
 	}
 }
 
 // WithSecurity configures the SDK to use the provided security details
 func WithSecurity(security shared.Security) SDKOption {
 	return func(sdk *SpaceTraders) {
-		sdk._security = &security
+		sdk.sdkConfiguration.Security = &security
 	}
 }
 
 // New creates a new instance of the SDK with the provided options
 func New(opts ...SDKOption) *SpaceTraders {
 	sdk := &SpaceTraders{
-		_language:   "go",
-		_sdkVersion: "1.1.0",
-		_genVersion: "2.34.2",
+		sdkConfiguration: sdkConfiguration{
+			Language:          "go",
+			OpenAPIDocVersion: "2.0.0",
+			SDKVersion:        "1.2.0",
+			GenVersion:        "2.37.0",
+		},
 	}
 	for _, opt := range opts {
 		opt(sdk)
 	}
 
 	// Use WithClient to override the default client if you would like to customize the timeout
-	if sdk._defaultClient == nil {
-		sdk._defaultClient = &http.Client{Timeout: 60 * time.Second}
+	if sdk.sdkConfiguration.DefaultClient == nil {
+		sdk.sdkConfiguration.DefaultClient = &http.Client{Timeout: 60 * time.Second}
 	}
-	if sdk._securityClient == nil {
-		if sdk._security != nil {
-			sdk._securityClient = utils.ConfigureSecurityClient(sdk._defaultClient, sdk._security)
+	if sdk.sdkConfiguration.SecurityClient == nil {
+		if sdk.sdkConfiguration.Security != nil {
+			sdk.sdkConfiguration.SecurityClient = utils.ConfigureSecurityClient(sdk.sdkConfiguration.DefaultClient, sdk.sdkConfiguration.Security)
 		} else {
-			sdk._securityClient = sdk._defaultClient
+			sdk.sdkConfiguration.SecurityClient = sdk.sdkConfiguration.DefaultClient
 		}
 	}
 
-	if sdk._serverURL == "" {
-		sdk._serverURL = ServerList[0]
-	}
+	sdk.Agents = newAgents(sdk.sdkConfiguration)
 
-	sdk.Agents = newAgents(
-		sdk._defaultClient,
-		sdk._securityClient,
-		sdk._serverURL,
-		sdk._language,
-		sdk._sdkVersion,
-		sdk._genVersion,
-	)
+	sdk.Contracts = newContracts(sdk.sdkConfiguration)
 
-	sdk.Contracts = newContracts(
-		sdk._defaultClient,
-		sdk._securityClient,
-		sdk._serverURL,
-		sdk._language,
-		sdk._sdkVersion,
-		sdk._genVersion,
-	)
+	sdk.Factions = newFactions(sdk.sdkConfiguration)
 
-	sdk.Factions = newFactions(
-		sdk._defaultClient,
-		sdk._securityClient,
-		sdk._serverURL,
-		sdk._language,
-		sdk._sdkVersion,
-		sdk._genVersion,
-	)
+	sdk.Fleet = newFleet(sdk.sdkConfiguration)
 
-	sdk.Fleet = newFleet(
-		sdk._defaultClient,
-		sdk._securityClient,
-		sdk._serverURL,
-		sdk._language,
-		sdk._sdkVersion,
-		sdk._genVersion,
-	)
-
-	sdk.Systems = newSystems(
-		sdk._defaultClient,
-		sdk._securityClient,
-		sdk._serverURL,
-		sdk._language,
-		sdk._sdkVersion,
-		sdk._genVersion,
-	)
+	sdk.Systems = newSystems(sdk.sdkConfiguration)
 
 	return sdk
 }
@@ -194,7 +182,7 @@ func New(opts ...SDKOption) *SpaceTraders {
 // GetStatus - Get Status
 // Return the status of the game server.
 func (s *SpaceTraders) GetStatus(ctx context.Context) (*operations.GetStatusResponse, error) {
-	baseURL := s._serverURL
+	baseURL := utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
 	url := strings.TrimSuffix(baseURL, "/") + "/"
 
 	req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
@@ -202,9 +190,9 @@ func (s *SpaceTraders) GetStatus(ctx context.Context) (*operations.GetStatusResp
 		return nil, fmt.Errorf("error creating request: %w", err)
 	}
 	req.Header.Set("Accept", "application/json")
-	req.Header.Set("user-agent", fmt.Sprintf("speakeasy-sdk/%s %s %s", s._language, s._sdkVersion, s._genVersion))
+	req.Header.Set("user-agent", fmt.Sprintf("speakeasy-sdk/%s %s %s %s", s.sdkConfiguration.Language, s.sdkConfiguration.SDKVersion, s.sdkConfiguration.GenVersion, s.sdkConfiguration.OpenAPIDocVersion))
 
-	client := s._securityClient
+	client := s.sdkConfiguration.SecurityClient
 
 	httpRes, err := client.Do(req)
 	if err != nil {
@@ -261,7 +249,7 @@ func (s *SpaceTraders) GetStatus(ctx context.Context) (*operations.GetStatusResp
 //
 // When your contract is fulfilled, you can call `/my/contracts/{contractId}/fulfill` to retrieve payment.
 func (s *SpaceTraders) Register(ctx context.Context, request operations.RegisterRequestBody) (*operations.RegisterResponse, error) {
-	baseURL := s._serverURL
+	baseURL := utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
 	url := strings.TrimSuffix(baseURL, "/") + "/register"
 
 	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, "Request", "json")
@@ -274,11 +262,11 @@ func (s *SpaceTraders) Register(ctx context.Context, request operations.Register
 		return nil, fmt.Errorf("error creating request: %w", err)
 	}
 	req.Header.Set("Accept", "application/json")
-	req.Header.Set("user-agent", fmt.Sprintf("speakeasy-sdk/%s %s %s", s._language, s._sdkVersion, s._genVersion))
+	req.Header.Set("user-agent", fmt.Sprintf("speakeasy-sdk/%s %s %s %s", s.sdkConfiguration.Language, s.sdkConfiguration.SDKVersion, s.sdkConfiguration.GenVersion, s.sdkConfiguration.OpenAPIDocVersion))
 
 	req.Header.Set("Content-Type", reqContentType)
 
-	client := s._securityClient
+	client := s.sdkConfiguration.SecurityClient
 
 	httpRes, err := client.Do(req)
 	if err != nil {

@@ -59,7 +59,7 @@ func main() {
     res, err := s.Fleet.CreateChart(ctx, operations.CreateChartRequest{
         ShipSymbol: "molestiae",
     }, operations.CreateChartSecurity{
-        AgentToken: "YOUR_BEARER_TOKEN_HERE",
+        AgentToken: "",
     })
     if err != nil {
         log.Fatal(err)
@@ -94,7 +94,7 @@ func main() {
     res, err := s.Fleet.CreateShipShipScan(ctx, operations.CreateShipShipScanRequest{
         ShipSymbol: "minus",
     }, operations.CreateShipShipScanSecurity{
-        AgentToken: "YOUR_BEARER_TOKEN_HERE",
+        AgentToken: "",
     })
     if err != nil {
         log.Fatal(err)
@@ -129,7 +129,7 @@ func main() {
     res, err := s.Fleet.CreateShipSystemScan(ctx, operations.CreateShipSystemScanRequest{
         ShipSymbol: "placeat",
     }, operations.CreateShipSystemScanSecurity{
-        AgentToken: "YOUR_BEARER_TOKEN_HERE",
+        AgentToken: "",
     })
     if err != nil {
         log.Fatal(err)
@@ -164,7 +164,7 @@ func main() {
     res, err := s.Fleet.CreateShipWaypointScan(ctx, operations.CreateShipWaypointScanRequest{
         ShipSymbol: "voluptatum",
     }, operations.CreateShipWaypointScanSecurity{
-        AgentToken: "YOUR_BEARER_TOKEN_HERE",
+        AgentToken: "",
     })
     if err != nil {
         log.Fatal(err)
@@ -201,7 +201,7 @@ func main() {
     res, err := s.Fleet.CreateSurvey(ctx, operations.CreateSurveyRequest{
         ShipSymbol: "iusto",
     }, operations.CreateSurveySecurity{
-        AgentToken: "YOUR_BEARER_TOKEN_HERE",
+        AgentToken: "",
     })
     if err != nil {
         log.Fatal(err)
@@ -238,7 +238,7 @@ func main() {
     res, err := s.Fleet.DockShip(ctx, operations.DockShipRequest{
         ShipSymbol: "excepturi",
     }, operations.DockShipSecurity{
-        AgentToken: "YOUR_BEARER_TOKEN_HERE",
+        AgentToken: "",
     })
     if err != nil {
         log.Fatal(err)
@@ -291,7 +291,7 @@ func main() {
         },
         ShipSymbol: "ipsam",
     }, operations.ExtractResourcesSecurity{
-        AgentToken: "YOUR_BEARER_TOKEN_HERE",
+        AgentToken: "",
     })
     if err != nil {
         log.Fatal(err)
@@ -326,7 +326,7 @@ func main() {
     res, err := s.Fleet.GetMyShip(ctx, operations.GetMyShipRequest{
         ShipSymbol: "repellendus",
     }, operations.GetMyShipSecurity{
-        AgentToken: "YOUR_BEARER_TOKEN_HERE",
+        AgentToken: "",
     })
     if err != nil {
         log.Fatal(err)
@@ -361,7 +361,7 @@ func main() {
     res, err := s.Fleet.GetMyShipCargo(ctx, operations.GetMyShipCargoRequest{
         ShipSymbol: "sapiente",
     }, operations.GetMyShipCargoSecurity{
-        AgentToken: "YOUR_BEARER_TOKEN_HERE",
+        AgentToken: "",
     })
     if err != nil {
         log.Fatal(err)
@@ -397,7 +397,7 @@ func main() {
         Limit: spacetraders.Int64(778157),
         Page: spacetraders.Int64(140350),
     }, operations.GetMyShipsSecurity{
-        AgentToken: "YOUR_BEARER_TOKEN_HERE",
+        AgentToken: "",
     })
     if err != nil {
         log.Fatal(err)
@@ -436,7 +436,7 @@ func main() {
     res, err := s.Fleet.GetShipCooldown(ctx, operations.GetShipCooldownRequest{
         ShipSymbol: "at",
     }, operations.GetShipCooldownSecurity{
-        AgentToken: "YOUR_BEARER_TOKEN_HERE",
+        AgentToken: "",
     })
     if err != nil {
         log.Fatal(err)
@@ -471,7 +471,7 @@ func main() {
     res, err := s.Fleet.GetShipNav(ctx, operations.GetShipNavRequest{
         ShipSymbol: "at",
     }, operations.GetShipNavSecurity{
-        AgentToken: "YOUR_BEARER_TOKEN_HERE",
+        AgentToken: "",
     })
     if err != nil {
         log.Fatal(err)
@@ -510,7 +510,7 @@ func main() {
         },
         ShipSymbol: "quod",
     }, operations.JettisonSecurity{
-        AgentToken: "YOUR_BEARER_TOKEN_HERE",
+        AgentToken: "",
     })
     if err != nil {
         log.Fatal(err)
@@ -548,7 +548,7 @@ func main() {
         },
         ShipSymbol: "esse",
     }, operations.JumpShipSecurity{
-        AgentToken: "YOUR_BEARER_TOKEN_HERE",
+        AgentToken: "",
     })
     if err != nil {
         log.Fatal(err)
@@ -590,7 +590,7 @@ func main() {
         },
         ShipSymbol: "porro",
     }, operations.NavigateShipSecurity{
-        AgentToken: "YOUR_BEARER_TOKEN_HERE",
+        AgentToken: "",
     })
     if err != nil {
         log.Fatal(err)
@@ -626,7 +626,7 @@ func main() {
         RequestBody: spacetraders.String("dolorum"),
         ShipSymbol: "dicta",
     }, operations.NegotiateContractSecurity{
-        AgentToken: "YOUR_BEARER_TOKEN_HERE",
+        AgentToken: "",
     })
     if err != nil {
         log.Fatal(err)
@@ -663,7 +663,7 @@ func main() {
     res, err := s.Fleet.OrbitShip(ctx, operations.OrbitShipRequest{
         ShipSymbol: "nam",
     }, operations.OrbitShipSecurity{
-        AgentToken: "YOUR_BEARER_TOKEN_HERE",
+        AgentToken: "",
     })
     if err != nil {
         log.Fatal(err)
@@ -702,7 +702,7 @@ func main() {
         },
         ShipSymbol: "occaecati",
     }, operations.PatchShipNavSecurity{
-        AgentToken: "YOUR_BEARER_TOKEN_HERE",
+        AgentToken: "",
     })
     if err != nil {
         log.Fatal(err)
@@ -741,7 +741,7 @@ func main() {
         },
         ShipSymbol: "hic",
     }, operations.PurchaseCargoSecurity{
-        AgentToken: "YOUR_BEARER_TOKEN_HERE",
+        AgentToken: "",
     })
     if err != nil {
         log.Fatal(err)
@@ -778,7 +778,7 @@ func main() {
         ShipType: shared.ShipTypeShipLightShuttle,
         WaypointSymbol: "totam",
     }, operations.PurchaseShipSecurity{
-        AgentToken: "YOUR_BEARER_TOKEN_HERE",
+        AgentToken: "",
     })
     if err != nil {
         log.Fatal(err)
@@ -813,7 +813,7 @@ func main() {
     res, err := s.Fleet.RefuelShip(ctx, operations.RefuelShipRequest{
         ShipSymbol: "beatae",
     }, operations.RefuelShipSecurity{
-        AgentToken: "YOUR_BEARER_TOKEN_HERE",
+        AgentToken: "",
     })
     if err != nil {
         log.Fatal(err)
@@ -852,7 +852,7 @@ func main() {
         },
         ShipSymbol: "modi",
     }, operations.SellCargoSecurity{
-        AgentToken: "YOUR_BEARER_TOKEN_HERE",
+        AgentToken: "",
     })
     if err != nil {
         log.Fatal(err)
@@ -890,7 +890,7 @@ func main() {
         },
         ShipSymbol: "impedit",
     }, operations.ShipRefineSecurity{
-        AgentToken: "YOUR_BEARER_TOKEN_HERE",
+        AgentToken: "",
     })
     if err != nil {
         log.Fatal(err)
@@ -930,7 +930,7 @@ func main() {
         },
         ShipSymbol: "excepturi",
     }, operations.TransferCargoSecurity{
-        AgentToken: "YOUR_BEARER_TOKEN_HERE",
+        AgentToken: "",
     })
     if err != nil {
         log.Fatal(err)
@@ -970,7 +970,7 @@ func main() {
         },
         ShipSymbol: "perferendis",
     }, operations.WarpShipSecurity{
-        AgentToken: "YOUR_BEARER_TOKEN_HERE",
+        AgentToken: "",
     })
     if err != nil {
         log.Fatal(err)

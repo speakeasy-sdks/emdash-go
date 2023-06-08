@@ -11,7 +11,7 @@ import(
 func main() {
     s := spacetraders.New(
         spacetraders.WithSecurity(shared.Security{
-            AgentToken: "YOUR_BEARER_TOKEN_HERE",
+            AgentToken: "",
         }),
     )
 

@@ -33,7 +33,7 @@ import(
 func main() {
     s := spacetraders.New(
         spacetraders.WithSecurity(shared.Security{
-            AgentToken: "YOUR_BEARER_TOKEN_HERE",
+            AgentToken: "",
         }),
     )
 
@@ -71,7 +71,7 @@ import(
 func main() {
     s := spacetraders.New(
         spacetraders.WithSecurity(shared.Security{
-            AgentToken: "YOUR_BEARER_TOKEN_HERE",
+            AgentToken: "",
         }),
     )
 
@@ -109,7 +109,7 @@ import(
 func main() {
     s := spacetraders.New(
         spacetraders.WithSecurity(shared.Security{
-            AgentToken: "YOUR_BEARER_TOKEN_HERE",
+            AgentToken: "",
         }),
     )
 
@@ -147,7 +147,7 @@ import(
 func main() {
     s := spacetraders.New(
         spacetraders.WithSecurity(shared.Security{
-            AgentToken: "YOUR_BEARER_TOKEN_HERE",
+            AgentToken: "",
         }),
     )
 
@@ -190,7 +190,7 @@ func main() {
         Page: spacetraders.Int64(902599),
         SystemSymbol: "fuga",
     }, operations.GetSystemWaypointsSecurity{
-        AgentToken: "YOUR_BEARER_TOKEN_HERE",
+        AgentToken: "",
     })
     if err != nil {
         log.Fatal(err)
@@ -221,7 +221,7 @@ import(
 func main() {
     s := spacetraders.New(
         spacetraders.WithSecurity(shared.Security{
-            AgentToken: "YOUR_BEARER_TOKEN_HERE",
+            AgentToken: "",
         }),
     )
 
@@ -259,7 +259,7 @@ import(
 func main() {
     s := spacetraders.New(
         spacetraders.WithSecurity(shared.Security{
-            AgentToken: "YOUR_BEARER_TOKEN_HERE",
+            AgentToken: "",
         }),
     )
 

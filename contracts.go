@@ -15,29 +15,19 @@ import (
 
 // contracts - Contracts
 type contracts struct {
-	defaultClient  HTTPClient
-	securityClient HTTPClient
-	serverURL      string
-	language       string
-	sdkVersion     string
-	genVersion     string
+	sdkConfiguration sdkConfiguration
 }
 
-func newContracts(defaultClient, securityClient HTTPClient, serverURL, language, sdkVersion, genVersion string) *contracts {
+func newContracts(sdkConfig sdkConfiguration) *contracts {
 	return &contracts{
-		defaultClient:  defaultClient,
-		securityClient: securityClient,
-		serverURL:      serverURL,
-		language:       language,
-		sdkVersion:     sdkVersion,
-		genVersion:     genVersion,
+		sdkConfiguration: sdkConfig,
 	}
 }
 
 // AcceptContract - Accept Contract
 // Accept a contract.
 func (s *contracts) AcceptContract(ctx context.Context, request operations.AcceptContractRequest, security operations.AcceptContractSecurity) (*operations.AcceptContractResponse, error) {
-	baseURL := s.serverURL
+	baseURL := utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
 	url, err := utils.GenerateURL(ctx, baseURL, "/my/contracts/{contractId}/accept", request, nil)
 	if err != nil {
 		return nil, fmt.Errorf("error generating URL: %w", err)
@@ -48,9 +38,9 @@ func (s *contracts) AcceptContract(ctx context.Context, request operations.Accep
 		return nil, fmt.Errorf("error creating request: %w", err)
 	}
 	req.Header.Set("Accept", "application/json")
-	req.Header.Set("user-agent", fmt.Sprintf("speakeasy-sdk/%s %s %s", s.language, s.sdkVersion, s.genVersion))
+	req.Header.Set("user-agent", fmt.Sprintf("speakeasy-sdk/%s %s %s %s", s.sdkConfiguration.Language, s.sdkConfiguration.SDKVersion, s.sdkConfiguration.GenVersion, s.sdkConfiguration.OpenAPIDocVersion))
 
-	client := utils.ConfigureSecurityClient(s.defaultClient, security)
+	client := utils.ConfigureSecurityClient(s.sdkConfiguration.DefaultClient, security)
 
 	httpRes, err := client.Do(req)
 	if err != nil {
@@ -93,7 +83,7 @@ func (s *contracts) AcceptContract(ctx context.Context, request operations.Accep
 // DeliverContract - Deliver Contract
 // Deliver cargo on a given contract.
 func (s *contracts) DeliverContract(ctx context.Context, request operations.DeliverContractRequest, security operations.DeliverContractSecurity) (*operations.DeliverContractResponse, error) {
-	baseURL := s.serverURL
+	baseURL := utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
 	url, err := utils.GenerateURL(ctx, baseURL, "/my/contracts/{contractId}/deliver", request, nil)
 	if err != nil {
 		return nil, fmt.Errorf("error generating URL: %w", err)
@@ -109,11 +99,11 @@ func (s *contracts) DeliverContract(ctx context.Context, request operations.Deli
 		return nil, fmt.Errorf("error creating request: %w", err)
 	}
 	req.Header.Set("Accept", "application/json")
-	req.Header.Set("user-agent", fmt.Sprintf("speakeasy-sdk/%s %s %s", s.language, s.sdkVersion, s.genVersion))
+	req.Header.Set("user-agent", fmt.Sprintf("speakeasy-sdk/%s %s %s %s", s.sdkConfiguration.Language, s.sdkConfiguration.SDKVersion, s.sdkConfiguration.GenVersion, s.sdkConfiguration.OpenAPIDocVersion))
 
 	req.Header.Set("Content-Type", reqContentType)
 
-	client := utils.ConfigureSecurityClient(s.defaultClient, security)
+	client := utils.ConfigureSecurityClient(s.sdkConfiguration.DefaultClient, security)
 
 	httpRes, err := client.Do(req)
 	if err != nil {
@@ -156,7 +146,7 @@ func (s *contracts) DeliverContract(ctx context.Context, request operations.Deli
 // FulfillContract - Fulfill Contract
 // Fulfill a contract
 func (s *contracts) FulfillContract(ctx context.Context, request operations.FulfillContractRequest, security operations.FulfillContractSecurity) (*operations.FulfillContractResponse, error) {
-	baseURL := s.serverURL
+	baseURL := utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
 	url, err := utils.GenerateURL(ctx, baseURL, "/my/contracts/{contractId}/fulfill", request, nil)
 	if err != nil {
 		return nil, fmt.Errorf("error generating URL: %w", err)
@@ -167,9 +157,9 @@ func (s *contracts) FulfillContract(ctx context.Context, request operations.Fulf
 		return nil, fmt.Errorf("error creating request: %w", err)
 	}
 	req.Header.Set("Accept", "application/json")
-	req.Header.Set("user-agent", fmt.Sprintf("speakeasy-sdk/%s %s %s", s.language, s.sdkVersion, s.genVersion))
+	req.Header.Set("user-agent", fmt.Sprintf("speakeasy-sdk/%s %s %s %s", s.sdkConfiguration.Language, s.sdkConfiguration.SDKVersion, s.sdkConfiguration.GenVersion, s.sdkConfiguration.OpenAPIDocVersion))
 
-	client := utils.ConfigureSecurityClient(s.defaultClient, security)
+	client := utils.ConfigureSecurityClient(s.sdkConfiguration.DefaultClient, security)
 
 	httpRes, err := client.Do(req)
 	if err != nil {
@@ -212,7 +202,7 @@ func (s *contracts) FulfillContract(ctx context.Context, request operations.Fulf
 // GetContract - Get Contract
 // Get the details of a contract by ID.
 func (s *contracts) GetContract(ctx context.Context, request operations.GetContractRequest, security operations.GetContractSecurity) (*operations.GetContractResponse, error) {
-	baseURL := s.serverURL
+	baseURL := utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
 	url, err := utils.GenerateURL(ctx, baseURL, "/my/contracts/{contractId}", request, nil)
 	if err != nil {
 		return nil, fmt.Errorf("error generating URL: %w", err)
@@ -223,9 +213,9 @@ func (s *contracts) GetContract(ctx context.Context, request operations.GetContr
 		return nil, fmt.Errorf("error creating request: %w", err)
 	}
 	req.Header.Set("Accept", "application/json")
-	req.Header.Set("user-agent", fmt.Sprintf("speakeasy-sdk/%s %s %s", s.language, s.sdkVersion, s.genVersion))
+	req.Header.Set("user-agent", fmt.Sprintf("speakeasy-sdk/%s %s %s %s", s.sdkConfiguration.Language, s.sdkConfiguration.SDKVersion, s.sdkConfiguration.GenVersion, s.sdkConfiguration.OpenAPIDocVersion))
 
-	client := utils.ConfigureSecurityClient(s.defaultClient, security)
+	client := utils.ConfigureSecurityClient(s.sdkConfiguration.DefaultClient, security)
 
 	httpRes, err := client.Do(req)
 	if err != nil {
@@ -268,7 +258,7 @@ func (s *contracts) GetContract(ctx context.Context, request operations.GetContr
 // GetContracts - List Contracts
 // List all of your contracts.
 func (s *contracts) GetContracts(ctx context.Context, request operations.GetContractsRequest, security operations.GetContractsSecurity) (*operations.GetContractsResponse, error) {
-	baseURL := s.serverURL
+	baseURL := utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
 	url := strings.TrimSuffix(baseURL, "/") + "/my/contracts"
 
 	req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
@@ -276,13 +266,13 @@ func (s *contracts) GetContracts(ctx context.Context, request operations.GetCont
 		return nil, fmt.Errorf("error creating request: %w", err)
 	}
 	req.Header.Set("Accept", "application/json")
-	req.Header.Set("user-agent", fmt.Sprintf("speakeasy-sdk/%s %s %s", s.language, s.sdkVersion, s.genVersion))
+	req.Header.Set("user-agent", fmt.Sprintf("speakeasy-sdk/%s %s %s %s", s.sdkConfiguration.Language, s.sdkConfiguration.SDKVersion, s.sdkConfiguration.GenVersion, s.sdkConfiguration.OpenAPIDocVersion))
 
 	if err := utils.PopulateQueryParams(ctx, req, request, nil); err != nil {
 		return nil, fmt.Errorf("error populating query params: %w", err)
 	}
 
-	client := utils.ConfigureSecurityClient(s.defaultClient, security)
+	client := utils.ConfigureSecurityClient(s.sdkConfiguration.DefaultClient, security)
 
 	httpRes, err := client.Do(req)
 	if err != nil {

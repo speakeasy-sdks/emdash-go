@@ -35,7 +35,7 @@ func main() {
     res, err := s.Contracts.AcceptContract(ctx, operations.AcceptContractRequest{
         ContractID: "illum",
     }, operations.AcceptContractSecurity{
-        AgentToken: "YOUR_BEARER_TOKEN_HERE",
+        AgentToken: "",
     })
     if err != nil {
         log.Fatal(err)
@@ -75,7 +75,7 @@ func main() {
         },
         ContractID: "suscipit",
     }, operations.DeliverContractSecurity{
-        AgentToken: "YOUR_BEARER_TOKEN_HERE",
+        AgentToken: "",
     })
     if err != nil {
         log.Fatal(err)
@@ -110,7 +110,7 @@ func main() {
     res, err := s.Contracts.FulfillContract(ctx, operations.FulfillContractRequest{
         ContractID: "iure",
     }, operations.FulfillContractSecurity{
-        AgentToken: "YOUR_BEARER_TOKEN_HERE",
+        AgentToken: "",
     })
     if err != nil {
         log.Fatal(err)
@@ -145,7 +145,7 @@ func main() {
     res, err := s.Contracts.GetContract(ctx, operations.GetContractRequest{
         ContractID: "magnam",
     }, operations.GetContractSecurity{
-        AgentToken: "YOUR_BEARER_TOKEN_HERE",
+        AgentToken: "",
     })
     if err != nil {
         log.Fatal(err)
@@ -181,7 +181,7 @@ func main() {
         Limit: spacetraders.Int64(891773),
         Page: spacetraders.Int64(56713),
     }, operations.GetContractsSecurity{
-        AgentToken: "YOUR_BEARER_TOKEN_HERE",
+        AgentToken: "",
     })
     if err != nil {
         log.Fatal(err)

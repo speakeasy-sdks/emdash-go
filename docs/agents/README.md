@@ -29,7 +29,7 @@ func main() {
 
     ctx := context.Background()
     res, err := s.Agents.GetMyAgent(ctx, operations.GetMyAgentSecurity{
-        AgentToken: "YOUR_BEARER_TOKEN_HERE",
+        AgentToken: "",
     })
     if err != nil {
         log.Fatal(err)

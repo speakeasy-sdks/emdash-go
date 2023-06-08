@@ -15,22 +15,12 @@ import (
 
 // fleet - Fleet
 type fleet struct {
-	defaultClient  HTTPClient
-	securityClient HTTPClient
-	serverURL      string
-	language       string
-	sdkVersion     string
-	genVersion     string
+	sdkConfiguration sdkConfiguration
 }
 
-func newFleet(defaultClient, securityClient HTTPClient, serverURL, language, sdkVersion, genVersion string) *fleet {
+func newFleet(sdkConfig sdkConfiguration) *fleet {
 	return &fleet{
-		defaultClient:  defaultClient,
-		securityClient: securityClient,
-		serverURL:      serverURL,
-		language:       language,
-		sdkVersion:     sdkVersion,
-		genVersion:     genVersion,
+		sdkConfiguration: sdkConfig,
 	}
 }
 
@@ -41,7 +31,7 @@ func newFleet(defaultClient, securityClient HTTPClient, serverURL, language, sdk
 //
 // Charting a location will record your agent as the one who created the chart.
 func (s *fleet) CreateChart(ctx context.Context, request operations.CreateChartRequest, security operations.CreateChartSecurity) (*operations.CreateChartResponse, error) {
-	baseURL := s.serverURL
+	baseURL := utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
 	url, err := utils.GenerateURL(ctx, baseURL, "/my/ships/{shipSymbol}/chart", request, nil)
 	if err != nil {
 		return nil, fmt.Errorf("error generating URL: %w", err)
@@ -52,9 +42,9 @@ func (s *fleet) CreateChart(ctx context.Context, request operations.CreateChartR
 		return nil, fmt.Errorf("error creating request: %w", err)
 	}
 	req.Header.Set("Accept", "application/json")
-	req.Header.Set("user-agent", fmt.Sprintf("speakeasy-sdk/%s %s %s", s.language, s.sdkVersion, s.genVersion))
+	req.Header.Set("user-agent", fmt.Sprintf("speakeasy-sdk/%s %s %s %s", s.sdkConfiguration.Language, s.sdkConfiguration.SDKVersion, s.sdkConfiguration.GenVersion, s.sdkConfiguration.OpenAPIDocVersion))
 
-	client := utils.ConfigureSecurityClient(s.defaultClient, security)
+	client := utils.ConfigureSecurityClient(s.sdkConfiguration.DefaultClient, security)
 
 	httpRes, err := client.Do(req)
 	if err != nil {
@@ -97,7 +87,7 @@ func (s *fleet) CreateChart(ctx context.Context, request operations.CreateChartR
 // CreateShipShipScan - Scan Ships
 // Activate your ship's sensor arrays to scan for ship information.
 func (s *fleet) CreateShipShipScan(ctx context.Context, request operations.CreateShipShipScanRequest, security operations.CreateShipShipScanSecurity) (*operations.CreateShipShipScanResponse, error) {
-	baseURL := s.serverURL
+	baseURL := utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
 	url, err := utils.GenerateURL(ctx, baseURL, "/my/ships/{shipSymbol}/scan/ships", request, nil)
 	if err != nil {
 		return nil, fmt.Errorf("error generating URL: %w", err)
@@ -108,9 +98,9 @@ func (s *fleet) CreateShipShipScan(ctx context.Context, request operations.Creat
 		return nil, fmt.Errorf("error creating request: %w", err)
 	}
 	req.Header.Set("Accept", "application/json")
-	req.Header.Set("user-agent", fmt.Sprintf("speakeasy-sdk/%s %s %s", s.language, s.sdkVersion, s.genVersion))
+	req.Header.Set("user-agent", fmt.Sprintf("speakeasy-sdk/%s %s %s %s", s.sdkConfiguration.Language, s.sdkConfiguration.SDKVersion, s.sdkConfiguration.GenVersion, s.sdkConfiguration.OpenAPIDocVersion))
 
-	client := utils.ConfigureSecurityClient(s.defaultClient, security)
+	client := utils.ConfigureSecurityClient(s.sdkConfiguration.DefaultClient, security)
 
 	httpRes, err := client.Do(req)
 	if err != nil {
@@ -153,7 +143,7 @@ func (s *fleet) CreateShipShipScan(ctx context.Context, request operations.Creat
 // CreateShipSystemScan - Scan Systems
 // Activate your ship's sensor arrays to scan for system information.
 func (s *fleet) CreateShipSystemScan(ctx context.Context, request operations.CreateShipSystemScanRequest, security operations.CreateShipSystemScanSecurity) (*operations.CreateShipSystemScanResponse, error) {
-	baseURL := s.serverURL
+	baseURL := utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
 	url, err := utils.GenerateURL(ctx, baseURL, "/my/ships/{shipSymbol}/scan/systems", request, nil)
 	if err != nil {
 		return nil, fmt.Errorf("error generating URL: %w", err)
@@ -164,9 +154,9 @@ func (s *fleet) CreateShipSystemScan(ctx context.Context, request operations.Cre
 		return nil, fmt.Errorf("error creating request: %w", err)
 	}
 	req.Header.Set("Accept", "application/json")
-	req.Header.Set("user-agent", fmt.Sprintf("speakeasy-sdk/%s %s %s", s.language, s.sdkVersion, s.genVersion))
+	req.Header.Set("user-agent", fmt.Sprintf("speakeasy-sdk/%s %s %s %s", s.sdkConfiguration.Language, s.sdkConfiguration.SDKVersion, s.sdkConfiguration.GenVersion, s.sdkConfiguration.OpenAPIDocVersion))
 
-	client := utils.ConfigureSecurityClient(s.defaultClient, security)
+	client := utils.ConfigureSecurityClient(s.sdkConfiguration.DefaultClient, security)
 
 	httpRes, err := client.Do(req)
 	if err != nil {
@@ -209,7 +199,7 @@ func (s *fleet) CreateShipSystemScan(ctx context.Context, request operations.Cre
 // CreateShipWaypointScan - Scan Waypoints
 // Activate your ship's sensor arrays to scan for waypoint information.
 func (s *fleet) CreateShipWaypointScan(ctx context.Context, request operations.CreateShipWaypointScanRequest, security operations.CreateShipWaypointScanSecurity) (*operations.CreateShipWaypointScanResponse, error) {
-	baseURL := s.serverURL
+	baseURL := utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
 	url, err := utils.GenerateURL(ctx, baseURL, "/my/ships/{shipSymbol}/scan/waypoints", request, nil)
 	if err != nil {
 		return nil, fmt.Errorf("error generating URL: %w", err)
@@ -220,9 +210,9 @@ func (s *fleet) CreateShipWaypointScan(ctx context.Context, request operations.C
 		return nil, fmt.Errorf("error creating request: %w", err)
 	}
 	req.Header.Set("Accept", "application/json")
-	req.Header.Set("user-agent", fmt.Sprintf("speakeasy-sdk/%s %s %s", s.language, s.sdkVersion, s.genVersion))
+	req.Header.Set("user-agent", fmt.Sprintf("speakeasy-sdk/%s %s %s %s", s.sdkConfiguration.Language, s.sdkConfiguration.SDKVersion, s.sdkConfiguration.GenVersion, s.sdkConfiguration.OpenAPIDocVersion))
 
-	client := utils.ConfigureSecurityClient(s.defaultClient, security)
+	client := utils.ConfigureSecurityClient(s.sdkConfiguration.DefaultClient, security)
 
 	httpRes, err := client.Do(req)
 	if err != nil {
@@ -267,7 +257,7 @@ func (s *fleet) CreateShipWaypointScan(ctx context.Context, request operations.C
 //
 // Your ship will enter a cooldown between consecutive survey requests. Surveys will eventually expire after a period of time. Multiple ships can use the same survey for extraction.
 func (s *fleet) CreateSurvey(ctx context.Context, request operations.CreateSurveyRequest, security operations.CreateSurveySecurity) (*operations.CreateSurveyResponse, error) {
-	baseURL := s.serverURL
+	baseURL := utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
 	url, err := utils.GenerateURL(ctx, baseURL, "/my/ships/{shipSymbol}/survey", request, nil)
 	if err != nil {
 		return nil, fmt.Errorf("error generating URL: %w", err)
@@ -278,9 +268,9 @@ func (s *fleet) CreateSurvey(ctx context.Context, request operations.CreateSurve
 		return nil, fmt.Errorf("error creating request: %w", err)
 	}
 	req.Header.Set("Accept", "application/json")
-	req.Header.Set("user-agent", fmt.Sprintf("speakeasy-sdk/%s %s %s", s.language, s.sdkVersion, s.genVersion))
+	req.Header.Set("user-agent", fmt.Sprintf("speakeasy-sdk/%s %s %s %s", s.sdkConfiguration.Language, s.sdkConfiguration.SDKVersion, s.sdkConfiguration.GenVersion, s.sdkConfiguration.OpenAPIDocVersion))
 
-	client := utils.ConfigureSecurityClient(s.defaultClient, security)
+	client := utils.ConfigureSecurityClient(s.sdkConfiguration.DefaultClient, security)
 
 	httpRes, err := client.Do(req)
 	if err != nil {
@@ -325,7 +315,7 @@ func (s *fleet) CreateSurvey(ctx context.Context, request operations.CreateSurve
 //
 // The endpoint is idempotent - successive calls will succeed even if the ship is already docked.
 func (s *fleet) DockShip(ctx context.Context, request operations.DockShipRequest, security operations.DockShipSecurity) (*operations.DockShipResponse, error) {
-	baseURL := s.serverURL
+	baseURL := utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
 	url, err := utils.GenerateURL(ctx, baseURL, "/my/ships/{shipSymbol}/dock", request, nil)
 	if err != nil {
 		return nil, fmt.Errorf("error generating URL: %w", err)
@@ -336,9 +326,9 @@ func (s *fleet) DockShip(ctx context.Context, request operations.DockShipRequest
 		return nil, fmt.Errorf("error creating request: %w", err)
 	}
 	req.Header.Set("Accept", "application/json")
-	req.Header.Set("user-agent", fmt.Sprintf("speakeasy-sdk/%s %s %s", s.language, s.sdkVersion, s.genVersion))
+	req.Header.Set("user-agent", fmt.Sprintf("speakeasy-sdk/%s %s %s %s", s.sdkConfiguration.Language, s.sdkConfiguration.SDKVersion, s.sdkConfiguration.GenVersion, s.sdkConfiguration.OpenAPIDocVersion))
 
-	client := utils.ConfigureSecurityClient(s.defaultClient, security)
+	client := utils.ConfigureSecurityClient(s.sdkConfiguration.DefaultClient, security)
 
 	httpRes, err := client.Do(req)
 	if err != nil {
@@ -381,7 +371,7 @@ func (s *fleet) DockShip(ctx context.Context, request operations.DockShipRequest
 // ExtractResources - Extract Resources
 // Extract resources from the waypoint into your ship. Send an optional survey as the payload to target specific yields.
 func (s *fleet) ExtractResources(ctx context.Context, request operations.ExtractResourcesRequest, security operations.ExtractResourcesSecurity) (*operations.ExtractResourcesResponse, error) {
-	baseURL := s.serverURL
+	baseURL := utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
 	url, err := utils.GenerateURL(ctx, baseURL, "/my/ships/{shipSymbol}/extract", request, nil)
 	if err != nil {
 		return nil, fmt.Errorf("error generating URL: %w", err)
@@ -397,11 +387,11 @@ func (s *fleet) ExtractResources(ctx context.Context, request operations.Extract
 		return nil, fmt.Errorf("error creating request: %w", err)
 	}
 	req.Header.Set("Accept", "application/json")
-	req.Header.Set("user-agent", fmt.Sprintf("speakeasy-sdk/%s %s %s", s.language, s.sdkVersion, s.genVersion))
+	req.Header.Set("user-agent", fmt.Sprintf("speakeasy-sdk/%s %s %s %s", s.sdkConfiguration.Language, s.sdkConfiguration.SDKVersion, s.sdkConfiguration.GenVersion, s.sdkConfiguration.OpenAPIDocVersion))
 
 	req.Header.Set("Content-Type", reqContentType)
 
-	client := utils.ConfigureSecurityClient(s.defaultClient, security)
+	client := utils.ConfigureSecurityClient(s.sdkConfiguration.DefaultClient, security)
 
 	httpRes, err := client.Do(req)
 	if err != nil {
@@ -444,7 +434,7 @@ func (s *fleet) ExtractResources(ctx context.Context, request operations.Extract
 // GetMyShip - Get Ship
 // Retrieve the details of your ship.
 func (s *fleet) GetMyShip(ctx context.Context, request operations.GetMyShipRequest, security operations.GetMyShipSecurity) (*operations.GetMyShipResponse, error) {
-	baseURL := s.serverURL
+	baseURL := utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
 	url, err := utils.GenerateURL(ctx, baseURL, "/my/ships/{shipSymbol}", request, nil)
 	if err != nil {
 		return nil, fmt.Errorf("error generating URL: %w", err)
@@ -455,9 +445,9 @@ func (s *fleet) GetMyShip(ctx context.Context, request operations.GetMyShipReque
 		return nil, fmt.Errorf("error creating request: %w", err)
 	}
 	req.Header.Set("Accept", "application/json")
-	req.Header.Set("user-agent", fmt.Sprintf("speakeasy-sdk/%s %s %s", s.language, s.sdkVersion, s.genVersion))
+	req.Header.Set("user-agent", fmt.Sprintf("speakeasy-sdk/%s %s %s %s", s.sdkConfiguration.Language, s.sdkConfiguration.SDKVersion, s.sdkConfiguration.GenVersion, s.sdkConfiguration.OpenAPIDocVersion))
 
-	client := utils.ConfigureSecurityClient(s.defaultClient, security)
+	client := utils.ConfigureSecurityClient(s.sdkConfiguration.DefaultClient, security)
 
 	httpRes, err := client.Do(req)
 	if err != nil {
@@ -500,7 +490,7 @@ func (s *fleet) GetMyShip(ctx context.Context, request operations.GetMyShipReque
 // GetMyShipCargo - Get Ship Cargo
 // Retrieve the cargo of your ship.
 func (s *fleet) GetMyShipCargo(ctx context.Context, request operations.GetMyShipCargoRequest, security operations.GetMyShipCargoSecurity) (*operations.GetMyShipCargoResponse, error) {
-	baseURL := s.serverURL
+	baseURL := utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
 	url, err := utils.GenerateURL(ctx, baseURL, "/my/ships/{shipSymbol}/cargo", request, nil)
 	if err != nil {
 		return nil, fmt.Errorf("error generating URL: %w", err)
@@ -511,9 +501,9 @@ func (s *fleet) GetMyShipCargo(ctx context.Context, request operations.GetMyShip
 		return nil, fmt.Errorf("error creating request: %w", err)
 	}
 	req.Header.Set("Accept", "application/json")
-	req.Header.Set("user-agent", fmt.Sprintf("speakeasy-sdk/%s %s %s", s.language, s.sdkVersion, s.genVersion))
+	req.Header.Set("user-agent", fmt.Sprintf("speakeasy-sdk/%s %s %s %s", s.sdkConfiguration.Language, s.sdkConfiguration.SDKVersion, s.sdkConfiguration.GenVersion, s.sdkConfiguration.OpenAPIDocVersion))
 
-	client := utils.ConfigureSecurityClient(s.defaultClient, security)
+	client := utils.ConfigureSecurityClient(s.sdkConfiguration.DefaultClient, security)
 
 	httpRes, err := client.Do(req)
 	if err != nil {
@@ -556,7 +546,7 @@ func (s *fleet) GetMyShipCargo(ctx context.Context, request operations.GetMyShip
 // GetMyShips - List Ships
 // Retrieve all of your ships.
 func (s *fleet) GetMyShips(ctx context.Context, request operations.GetMyShipsRequest, security operations.GetMyShipsSecurity) (*operations.GetMyShipsResponse, error) {
-	baseURL := s.serverURL
+	baseURL := utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
 	url := strings.TrimSuffix(baseURL, "/") + "/my/ships"
 
 	req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
@@ -564,13 +554,13 @@ func (s *fleet) GetMyShips(ctx context.Context, request operations.GetMyShipsReq
 		return nil, fmt.Errorf("error creating request: %w", err)
 	}
 	req.Header.Set("Accept", "application/json")
-	req.Header.Set("user-agent", fmt.Sprintf("speakeasy-sdk/%s %s %s", s.language, s.sdkVersion, s.genVersion))
+	req.Header.Set("user-agent", fmt.Sprintf("speakeasy-sdk/%s %s %s %s", s.sdkConfiguration.Language, s.sdkConfiguration.SDKVersion, s.sdkConfiguration.GenVersion, s.sdkConfiguration.OpenAPIDocVersion))
 
 	if err := utils.PopulateQueryParams(ctx, req, request, nil); err != nil {
 		return nil, fmt.Errorf("error populating query params: %w", err)
 	}
 
-	client := utils.ConfigureSecurityClient(s.defaultClient, security)
+	client := utils.ConfigureSecurityClient(s.sdkConfiguration.DefaultClient, security)
 
 	httpRes, err := client.Do(req)
 	if err != nil {
@@ -617,7 +607,7 @@ func (s *fleet) GetMyShips(ctx context.Context, request operations.GetMyShipsReq
 //
 // Response returns a 204 status code (no-content) when the ship has no cooldown.
 func (s *fleet) GetShipCooldown(ctx context.Context, request operations.GetShipCooldownRequest, security operations.GetShipCooldownSecurity) (*operations.GetShipCooldownResponse, error) {
-	baseURL := s.serverURL
+	baseURL := utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
 	url, err := utils.GenerateURL(ctx, baseURL, "/my/ships/{shipSymbol}/cooldown", request, nil)
 	if err != nil {
 		return nil, fmt.Errorf("error generating URL: %w", err)
@@ -628,9 +618,9 @@ func (s *fleet) GetShipCooldown(ctx context.Context, request operations.GetShipC
 		return nil, fmt.Errorf("error creating request: %w", err)
 	}
 	req.Header.Set("Accept", "application/json")
-	req.Header.Set("user-agent", fmt.Sprintf("speakeasy-sdk/%s %s %s", s.language, s.sdkVersion, s.genVersion))
+	req.Header.Set("user-agent", fmt.Sprintf("speakeasy-sdk/%s %s %s %s", s.sdkConfiguration.Language, s.sdkConfiguration.SDKVersion, s.sdkConfiguration.GenVersion, s.sdkConfiguration.OpenAPIDocVersion))
 
-	client := utils.ConfigureSecurityClient(s.defaultClient, security)
+	client := utils.ConfigureSecurityClient(s.sdkConfiguration.DefaultClient, security)
 
 	httpRes, err := client.Do(req)
 	if err != nil {
@@ -674,7 +664,7 @@ func (s *fleet) GetShipCooldown(ctx context.Context, request operations.GetShipC
 // GetShipNav - Get Ship Nav
 // Get the current nav status of a ship.
 func (s *fleet) GetShipNav(ctx context.Context, request operations.GetShipNavRequest, security operations.GetShipNavSecurity) (*operations.GetShipNavResponse, error) {
-	baseURL := s.serverURL
+	baseURL := utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
 	url, err := utils.GenerateURL(ctx, baseURL, "/my/ships/{shipSymbol}/nav", request, nil)
 	if err != nil {
 		return nil, fmt.Errorf("error generating URL: %w", err)
@@ -685,9 +675,9 @@ func (s *fleet) GetShipNav(ctx context.Context, request operations.GetShipNavReq
 		return nil, fmt.Errorf("error creating request: %w", err)
 	}
 	req.Header.Set("Accept", "application/json")
-	req.Header.Set("user-agent", fmt.Sprintf("speakeasy-sdk/%s %s %s", s.language, s.sdkVersion, s.genVersion))
+	req.Header.Set("user-agent", fmt.Sprintf("speakeasy-sdk/%s %s %s %s", s.sdkConfiguration.Language, s.sdkConfiguration.SDKVersion, s.sdkConfiguration.GenVersion, s.sdkConfiguration.OpenAPIDocVersion))
 
-	client := utils.ConfigureSecurityClient(s.defaultClient, security)
+	client := utils.ConfigureSecurityClient(s.sdkConfiguration.DefaultClient, security)
 
 	httpRes, err := client.Do(req)
 	if err != nil {
@@ -730,7 +720,7 @@ func (s *fleet) GetShipNav(ctx context.Context, request operations.GetShipNavReq
 // Jettison - Jettison Cargo
 // Jettison cargo from your ship's cargo hold.
 func (s *fleet) Jettison(ctx context.Context, request operations.JettisonRequest, security operations.JettisonSecurity) (*operations.JettisonResponse, error) {
-	baseURL := s.serverURL
+	baseURL := utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
 	url, err := utils.GenerateURL(ctx, baseURL, "/my/ships/{shipSymbol}/jettison", request, nil)
 	if err != nil {
 		return nil, fmt.Errorf("error generating URL: %w", err)
@@ -746,11 +736,11 @@ func (s *fleet) Jettison(ctx context.Context, request operations.JettisonRequest
 		return nil, fmt.Errorf("error creating request: %w", err)
 	}
 	req.Header.Set("Accept", "application/json")
-	req.Header.Set("user-agent", fmt.Sprintf("speakeasy-sdk/%s %s %s", s.language, s.sdkVersion, s.genVersion))
+	req.Header.Set("user-agent", fmt.Sprintf("speakeasy-sdk/%s %s %s %s", s.sdkConfiguration.Language, s.sdkConfiguration.SDKVersion, s.sdkConfiguration.GenVersion, s.sdkConfiguration.OpenAPIDocVersion))
 
 	req.Header.Set("Content-Type", reqContentType)
 
-	client := utils.ConfigureSecurityClient(s.defaultClient, security)
+	client := utils.ConfigureSecurityClient(s.sdkConfiguration.DefaultClient, security)
 
 	httpRes, err := client.Do(req)
 	if err != nil {
@@ -793,7 +783,7 @@ func (s *fleet) Jettison(ctx context.Context, request operations.JettisonRequest
 // JumpShip - Jump Ship
 // Jump your ship instantly to a target system. When used while in orbit or docked to a jump gate waypoint, any ship can use this command. When used elsewhere, jumping requires a jump drive unit and consumes a unit of antimatter (which needs to be in your cargo).
 func (s *fleet) JumpShip(ctx context.Context, request operations.JumpShipRequest, security operations.JumpShipSecurity) (*operations.JumpShipResponse, error) {
-	baseURL := s.serverURL
+	baseURL := utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
 	url, err := utils.GenerateURL(ctx, baseURL, "/my/ships/{shipSymbol}/jump", request, nil)
 	if err != nil {
 		return nil, fmt.Errorf("error generating URL: %w", err)
@@ -809,11 +799,11 @@ func (s *fleet) JumpShip(ctx context.Context, request operations.JumpShipRequest
 		return nil, fmt.Errorf("error creating request: %w", err)
 	}
 	req.Header.Set("Accept", "application/json")
-	req.Header.Set("user-agent", fmt.Sprintf("speakeasy-sdk/%s %s %s", s.language, s.sdkVersion, s.genVersion))
+	req.Header.Set("user-agent", fmt.Sprintf("speakeasy-sdk/%s %s %s %s", s.sdkConfiguration.Language, s.sdkConfiguration.SDKVersion, s.sdkConfiguration.GenVersion, s.sdkConfiguration.OpenAPIDocVersion))
 
 	req.Header.Set("Content-Type", reqContentType)
 
-	client := utils.ConfigureSecurityClient(s.defaultClient, security)
+	client := utils.ConfigureSecurityClient(s.sdkConfiguration.DefaultClient, security)
 
 	httpRes, err := client.Do(req)
 	if err != nil {
@@ -860,7 +850,7 @@ func (s *fleet) JumpShip(ctx context.Context, request operations.JumpShipRequest
 //
 // To travel between systems, see the ship's warp or jump actions.
 func (s *fleet) NavigateShip(ctx context.Context, request operations.NavigateShipRequest, security operations.NavigateShipSecurity) (*operations.NavigateShipResponse, error) {
-	baseURL := s.serverURL
+	baseURL := utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
 	url, err := utils.GenerateURL(ctx, baseURL, "/my/ships/{shipSymbol}/navigate", request, nil)
 	if err != nil {
 		return nil, fmt.Errorf("error generating URL: %w", err)
@@ -876,11 +866,11 @@ func (s *fleet) NavigateShip(ctx context.Context, request operations.NavigateShi
 		return nil, fmt.Errorf("error creating request: %w", err)
 	}
 	req.Header.Set("Accept", "application/json")
-	req.Header.Set("user-agent", fmt.Sprintf("speakeasy-sdk/%s %s %s", s.language, s.sdkVersion, s.genVersion))
+	req.Header.Set("user-agent", fmt.Sprintf("speakeasy-sdk/%s %s %s %s", s.sdkConfiguration.Language, s.sdkConfiguration.SDKVersion, s.sdkConfiguration.GenVersion, s.sdkConfiguration.OpenAPIDocVersion))
 
 	req.Header.Set("Content-Type", reqContentType)
 
-	client := utils.ConfigureSecurityClient(s.defaultClient, security)
+	client := utils.ConfigureSecurityClient(s.sdkConfiguration.DefaultClient, security)
 
 	httpRes, err := client.Do(req)
 	if err != nil {
@@ -922,7 +912,7 @@ func (s *fleet) NavigateShip(ctx context.Context, request operations.NavigateShi
 
 // NegotiateContract - Negotiate Contract
 func (s *fleet) NegotiateContract(ctx context.Context, request operations.NegotiateContractRequest, security operations.NegotiateContractSecurity) (*operations.NegotiateContractResponse, error) {
-	baseURL := s.serverURL
+	baseURL := utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
 	url, err := utils.GenerateURL(ctx, baseURL, "/my/ships/{shipSymbol}/negotiate/contract", request, nil)
 	if err != nil {
 		return nil, fmt.Errorf("error generating URL: %w", err)
@@ -938,11 +928,11 @@ func (s *fleet) NegotiateContract(ctx context.Context, request operations.Negoti
 		return nil, fmt.Errorf("error creating request: %w", err)
 	}
 	req.Header.Set("Accept", "application/json")
-	req.Header.Set("user-agent", fmt.Sprintf("speakeasy-sdk/%s %s %s", s.language, s.sdkVersion, s.genVersion))
+	req.Header.Set("user-agent", fmt.Sprintf("speakeasy-sdk/%s %s %s %s", s.sdkConfiguration.Language, s.sdkConfiguration.SDKVersion, s.sdkConfiguration.GenVersion, s.sdkConfiguration.OpenAPIDocVersion))
 
 	req.Header.Set("Content-Type", reqContentType)
 
-	client := utils.ConfigureSecurityClient(s.defaultClient, security)
+	client := utils.ConfigureSecurityClient(s.sdkConfiguration.DefaultClient, security)
 
 	httpRes, err := client.Do(req)
 	if err != nil {
@@ -987,7 +977,7 @@ func (s *fleet) NegotiateContract(ctx context.Context, request operations.Negoti
 //
 // The endpoint is idempotent - successive calls will succeed even if the ship is already in orbit.
 func (s *fleet) OrbitShip(ctx context.Context, request operations.OrbitShipRequest, security operations.OrbitShipSecurity) (*operations.OrbitShipResponse, error) {
-	baseURL := s.serverURL
+	baseURL := utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
 	url, err := utils.GenerateURL(ctx, baseURL, "/my/ships/{shipSymbol}/orbit", request, nil)
 	if err != nil {
 		return nil, fmt.Errorf("error generating URL: %w", err)
@@ -998,9 +988,9 @@ func (s *fleet) OrbitShip(ctx context.Context, request operations.OrbitShipReque
 		return nil, fmt.Errorf("error creating request: %w", err)
 	}
 	req.Header.Set("Accept", "application/json")
-	req.Header.Set("user-agent", fmt.Sprintf("speakeasy-sdk/%s %s %s", s.language, s.sdkVersion, s.genVersion))
+	req.Header.Set("user-agent", fmt.Sprintf("speakeasy-sdk/%s %s %s %s", s.sdkConfiguration.Language, s.sdkConfiguration.SDKVersion, s.sdkConfiguration.GenVersion, s.sdkConfiguration.OpenAPIDocVersion))
 
-	client := utils.ConfigureSecurityClient(s.defaultClient, security)
+	client := utils.ConfigureSecurityClient(s.sdkConfiguration.DefaultClient, security)
 
 	httpRes, err := client.Do(req)
 	if err != nil {
@@ -1043,7 +1033,7 @@ func (s *fleet) OrbitShip(ctx context.Context, request operations.OrbitShipReque
 // PatchShipNav - Patch Ship Nav
 // Update the nav data of a ship, such as the flight mode.
 func (s *fleet) PatchShipNav(ctx context.Context, request operations.PatchShipNavRequest, security operations.PatchShipNavSecurity) (*operations.PatchShipNavResponse, error) {
-	baseURL := s.serverURL
+	baseURL := utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
 	url, err := utils.GenerateURL(ctx, baseURL, "/my/ships/{shipSymbol}/nav", request, nil)
 	if err != nil {
 		return nil, fmt.Errorf("error generating URL: %w", err)
@@ -1059,11 +1049,11 @@ func (s *fleet) PatchShipNav(ctx context.Context, request operations.PatchShipNa
 		return nil, fmt.Errorf("error creating request: %w", err)
 	}
 	req.Header.Set("Accept", "application/json")
-	req.Header.Set("user-agent", fmt.Sprintf("speakeasy-sdk/%s %s %s", s.language, s.sdkVersion, s.genVersion))
+	req.Header.Set("user-agent", fmt.Sprintf("speakeasy-sdk/%s %s %s %s", s.sdkConfiguration.Language, s.sdkConfiguration.SDKVersion, s.sdkConfiguration.GenVersion, s.sdkConfiguration.OpenAPIDocVersion))
 
 	req.Header.Set("Content-Type", reqContentType)
 
-	client := utils.ConfigureSecurityClient(s.defaultClient, security)
+	client := utils.ConfigureSecurityClient(s.sdkConfiguration.DefaultClient, security)
 
 	httpRes, err := client.Do(req)
 	if err != nil {
@@ -1106,7 +1096,7 @@ func (s *fleet) PatchShipNav(ctx context.Context, request operations.PatchShipNa
 // PurchaseCargo - Purchase Cargo
 // Purchase cargo.
 func (s *fleet) PurchaseCargo(ctx context.Context, request operations.PurchaseCargoRequest, security operations.PurchaseCargoSecurity) (*operations.PurchaseCargoResponse, error) {
-	baseURL := s.serverURL
+	baseURL := utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
 	url, err := utils.GenerateURL(ctx, baseURL, "/my/ships/{shipSymbol}/purchase", request, nil)
 	if err != nil {
 		return nil, fmt.Errorf("error generating URL: %w", err)
@@ -1122,11 +1112,11 @@ func (s *fleet) PurchaseCargo(ctx context.Context, request operations.PurchaseCa
 		return nil, fmt.Errorf("error creating request: %w", err)
 	}
 	req.Header.Set("Accept", "application/json")
-	req.Header.Set("user-agent", fmt.Sprintf("speakeasy-sdk/%s %s %s", s.language, s.sdkVersion, s.genVersion))
+	req.Header.Set("user-agent", fmt.Sprintf("speakeasy-sdk/%s %s %s %s", s.sdkConfiguration.Language, s.sdkConfiguration.SDKVersion, s.sdkConfiguration.GenVersion, s.sdkConfiguration.OpenAPIDocVersion))
 
 	req.Header.Set("Content-Type", reqContentType)
 
-	client := utils.ConfigureSecurityClient(s.defaultClient, security)
+	client := utils.ConfigureSecurityClient(s.sdkConfiguration.DefaultClient, security)
 
 	httpRes, err := client.Do(req)
 	if err != nil {
@@ -1169,7 +1159,7 @@ func (s *fleet) PurchaseCargo(ctx context.Context, request operations.PurchaseCa
 // PurchaseShip - Purchase Ship
 // Purchase a ship
 func (s *fleet) PurchaseShip(ctx context.Context, request operations.PurchaseShipRequestBody, security operations.PurchaseShipSecurity) (*operations.PurchaseShipResponse, error) {
-	baseURL := s.serverURL
+	baseURL := utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
 	url := strings.TrimSuffix(baseURL, "/") + "/my/ships"
 
 	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, "Request", "json")
@@ -1182,11 +1172,11 @@ func (s *fleet) PurchaseShip(ctx context.Context, request operations.PurchaseShi
 		return nil, fmt.Errorf("error creating request: %w", err)
 	}
 	req.Header.Set("Accept", "application/json")
-	req.Header.Set("user-agent", fmt.Sprintf("speakeasy-sdk/%s %s %s", s.language, s.sdkVersion, s.genVersion))
+	req.Header.Set("user-agent", fmt.Sprintf("speakeasy-sdk/%s %s %s %s", s.sdkConfiguration.Language, s.sdkConfiguration.SDKVersion, s.sdkConfiguration.GenVersion, s.sdkConfiguration.OpenAPIDocVersion))
 
 	req.Header.Set("Content-Type", reqContentType)
 
-	client := utils.ConfigureSecurityClient(s.defaultClient, security)
+	client := utils.ConfigureSecurityClient(s.sdkConfiguration.DefaultClient, security)
 
 	httpRes, err := client.Do(req)
 	if err != nil {
@@ -1229,7 +1219,7 @@ func (s *fleet) PurchaseShip(ctx context.Context, request operations.PurchaseShi
 // RefuelShip - Refuel Ship
 // Refuel your ship from the local market.
 func (s *fleet) RefuelShip(ctx context.Context, request operations.RefuelShipRequest, security operations.RefuelShipSecurity) (*operations.RefuelShipResponse, error) {
-	baseURL := s.serverURL
+	baseURL := utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
 	url, err := utils.GenerateURL(ctx, baseURL, "/my/ships/{shipSymbol}/refuel", request, nil)
 	if err != nil {
 		return nil, fmt.Errorf("error generating URL: %w", err)
@@ -1240,9 +1230,9 @@ func (s *fleet) RefuelShip(ctx context.Context, request operations.RefuelShipReq
 		return nil, fmt.Errorf("error creating request: %w", err)
 	}
 	req.Header.Set("Accept", "application/json")
-	req.Header.Set("user-agent", fmt.Sprintf("speakeasy-sdk/%s %s %s", s.language, s.sdkVersion, s.genVersion))
+	req.Header.Set("user-agent", fmt.Sprintf("speakeasy-sdk/%s %s %s %s", s.sdkConfiguration.Language, s.sdkConfiguration.SDKVersion, s.sdkConfiguration.GenVersion, s.sdkConfiguration.OpenAPIDocVersion))
 
-	client := utils.ConfigureSecurityClient(s.defaultClient, security)
+	client := utils.ConfigureSecurityClient(s.sdkConfiguration.DefaultClient, security)
 
 	httpRes, err := client.Do(req)
 	if err != nil {
@@ -1285,7 +1275,7 @@ func (s *fleet) RefuelShip(ctx context.Context, request operations.RefuelShipReq
 // SellCargo - Sell Cargo
 // Sell cargo.
 func (s *fleet) SellCargo(ctx context.Context, request operations.SellCargoRequest, security operations.SellCargoSecurity) (*operations.SellCargoResponse, error) {
-	baseURL := s.serverURL
+	baseURL := utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
 	url, err := utils.GenerateURL(ctx, baseURL, "/my/ships/{shipSymbol}/sell", request, nil)
 	if err != nil {
 		return nil, fmt.Errorf("error generating URL: %w", err)
@@ -1301,11 +1291,11 @@ func (s *fleet) SellCargo(ctx context.Context, request operations.SellCargoReque
 		return nil, fmt.Errorf("error creating request: %w", err)
 	}
 	req.Header.Set("Accept", "application/json")
-	req.Header.Set("user-agent", fmt.Sprintf("speakeasy-sdk/%s %s %s", s.language, s.sdkVersion, s.genVersion))
+	req.Header.Set("user-agent", fmt.Sprintf("speakeasy-sdk/%s %s %s %s", s.sdkConfiguration.Language, s.sdkConfiguration.SDKVersion, s.sdkConfiguration.GenVersion, s.sdkConfiguration.OpenAPIDocVersion))
 
 	req.Header.Set("Content-Type", reqContentType)
 
-	client := utils.ConfigureSecurityClient(s.defaultClient, security)
+	client := utils.ConfigureSecurityClient(s.sdkConfiguration.DefaultClient, security)
 
 	httpRes, err := client.Do(req)
 	if err != nil {
@@ -1348,7 +1338,7 @@ func (s *fleet) SellCargo(ctx context.Context, request operations.SellCargoReque
 // ShipRefine - Ship Refine
 // Attempt to refine the raw materials on your ship. The request will only succeed if your ship is capable of refining at the time of the request.
 func (s *fleet) ShipRefine(ctx context.Context, request operations.ShipRefineRequest, security operations.ShipRefineSecurity) (*operations.ShipRefineResponse, error) {
-	baseURL := s.serverURL
+	baseURL := utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
 	url, err := utils.GenerateURL(ctx, baseURL, "/my/ships/{shipSymbol}/refine", request, nil)
 	if err != nil {
 		return nil, fmt.Errorf("error generating URL: %w", err)
@@ -1364,11 +1354,11 @@ func (s *fleet) ShipRefine(ctx context.Context, request operations.ShipRefineReq
 		return nil, fmt.Errorf("error creating request: %w", err)
 	}
 	req.Header.Set("Accept", "application/json")
-	req.Header.Set("user-agent", fmt.Sprintf("speakeasy-sdk/%s %s %s", s.language, s.sdkVersion, s.genVersion))
+	req.Header.Set("user-agent", fmt.Sprintf("speakeasy-sdk/%s %s %s %s", s.sdkConfiguration.Language, s.sdkConfiguration.SDKVersion, s.sdkConfiguration.GenVersion, s.sdkConfiguration.OpenAPIDocVersion))
 
 	req.Header.Set("Content-Type", reqContentType)
 
-	client := utils.ConfigureSecurityClient(s.defaultClient, security)
+	client := utils.ConfigureSecurityClient(s.sdkConfiguration.DefaultClient, security)
 
 	httpRes, err := client.Do(req)
 	if err != nil {
@@ -1411,7 +1401,7 @@ func (s *fleet) ShipRefine(ctx context.Context, request operations.ShipRefineReq
 // TransferCargo - Transfer Cargo
 // Transfer cargo between ships.
 func (s *fleet) TransferCargo(ctx context.Context, request operations.TransferCargoRequest, security operations.TransferCargoSecurity) (*operations.TransferCargoResponse, error) {
-	baseURL := s.serverURL
+	baseURL := utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
 	url, err := utils.GenerateURL(ctx, baseURL, "/my/ships/{shipSymbol}/transfer", request, nil)
 	if err != nil {
 		return nil, fmt.Errorf("error generating URL: %w", err)
@@ -1427,11 +1417,11 @@ func (s *fleet) TransferCargo(ctx context.Context, request operations.TransferCa
 		return nil, fmt.Errorf("error creating request: %w", err)
 	}
 	req.Header.Set("Accept", "application/json")
-	req.Header.Set("user-agent", fmt.Sprintf("speakeasy-sdk/%s %s %s", s.language, s.sdkVersion, s.genVersion))
+	req.Header.Set("user-agent", fmt.Sprintf("speakeasy-sdk/%s %s %s %s", s.sdkConfiguration.Language, s.sdkConfiguration.SDKVersion, s.sdkConfiguration.GenVersion, s.sdkConfiguration.OpenAPIDocVersion))
 
 	req.Header.Set("Content-Type", reqContentType)
 
-	client := utils.ConfigureSecurityClient(s.defaultClient, security)
+	client := utils.ConfigureSecurityClient(s.sdkConfiguration.DefaultClient, security)
 
 	httpRes, err := client.Do(req)
 	if err != nil {
@@ -1476,7 +1466,7 @@ func (s *fleet) TransferCargo(ctx context.Context, request operations.TransferCa
 //
 // The returned response will detail the route information including the expected time of arrival. Most ship actions are unavailable until the ship has arrived at it's destination.
 func (s *fleet) WarpShip(ctx context.Context, request operations.WarpShipRequest, security operations.WarpShipSecurity) (*operations.WarpShipResponse, error) {
-	baseURL := s.serverURL
+	baseURL := utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
 	url, err := utils.GenerateURL(ctx, baseURL, "/my/ships/{shipSymbol}/warp", request, nil)
 	if err != nil {
 		return nil, fmt.Errorf("error generating URL: %w", err)
@@ -1492,11 +1482,11 @@ func (s *fleet) WarpShip(ctx context.Context, request operations.WarpShipRequest
 		return nil, fmt.Errorf("error creating request: %w", err)
 	}
 	req.Header.Set("Accept", "application/json")
-	req.Header.Set("user-agent", fmt.Sprintf("speakeasy-sdk/%s %s %s", s.language, s.sdkVersion, s.genVersion))
+	req.Header.Set("user-agent", fmt.Sprintf("speakeasy-sdk/%s %s %s %s", s.sdkConfiguration.Language, s.sdkConfiguration.SDKVersion, s.sdkConfiguration.GenVersion, s.sdkConfiguration.OpenAPIDocVersion))
 
 	req.Header.Set("Content-Type", reqContentType)
 
-	client := utils.ConfigureSecurityClient(s.defaultClient, security)
+	client := utils.ConfigureSecurityClient(s.sdkConfiguration.DefaultClient, security)
 
 	httpRes, err := client.Do(req)
 	if err != nil {
