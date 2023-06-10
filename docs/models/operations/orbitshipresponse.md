@@ -1,0 +1,11 @@
+# OrbitShipResponse
+
+
+## Fields
+
+| Field                                                                                      | Type                                                                                       | Required                                                                                   | Description                                                                                |
+| ------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------ |
+| `ContentType`                                                                              | *string*                                                                                   | :heavy_check_mark:                                                                         | N/A                                                                                        |
+| `OrbitShip200Response`                                                                     | [*OrbitShipOrbitShip200Response](../../models/operations/orbitshiporbitship200response.md) | :heavy_minus_sign:                                                                         | The ship has successfully moved into orbit at it's current location.                       |
+| `StatusCode`                                                                               | *int*                                                                                      | :heavy_check_mark:                                                                         | N/A                                                                                        |
+| `RawResponse`                                                                              | [*http.Response](https://pkg.go.dev/net/http#Response)                                     | :heavy_minus_sign:                                                                         | N/A                                                                                        |

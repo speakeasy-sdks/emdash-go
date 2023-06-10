@@ -1,0 +1,15 @@
+# ShipReactor
+
+The reactor of the ship. The reactor is responsible for powering the ship's systems and weapons.
+
+
+## Fields
+
+| Field                                                                                 | Type                                                                                  | Required                                                                              | Description                                                                           |
+| ------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------- |
+| `Condition`                                                                           | **int64*                                                                              | :heavy_minus_sign:                                                                    | Condition is a range of 0 to 100 where 0 is completely worn out and 100 is brand new. |
+| `Description`                                                                         | *string*                                                                              | :heavy_check_mark:                                                                    | N/A                                                                                   |
+| `Name`                                                                                | *string*                                                                              | :heavy_check_mark:                                                                    | N/A                                                                                   |
+| `PowerOutput`                                                                         | *int64*                                                                               | :heavy_check_mark:                                                                    | N/A                                                                                   |
+| `Requirements`                                                                        | [ShipRequirements](../../models/shared/shiprequirements.md)                           | :heavy_check_mark:                                                                    | The requirements for installation on a ship                                           |
+| `Symbol`                                                                              | [ShipReactorSymbol](../../models/shared/shipreactorsymbol.md)                         | :heavy_check_mark:                                                                    | N/A                                                                                   |

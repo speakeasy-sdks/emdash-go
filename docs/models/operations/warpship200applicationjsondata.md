@@ -1,0 +1,9 @@
+# WarpShip200ApplicationJSONData
+
+
+## Fields
+
+| Field                                                                                                    | Type                                                                                                     | Required                                                                                                 | Description                                                                                              |
+| -------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
+| `Fuel`                                                                                                   | [shared.ShipFuel](../../models/shared/shipfuel.md)                                                       | :heavy_check_mark:                                                                                       | Details of the ship's fuel tanks including how much fuel was consumed during the last transit or action. |
+| `Nav`                                                                                                    | [shared.ShipNav](../../models/shared/shipnav.md)                                                         | :heavy_check_mark:                                                                                       | The navigation information of the ship.                                                                  |
